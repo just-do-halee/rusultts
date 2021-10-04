@@ -1,0 +1,43 @@
+{
+  "name": "rusultts",
+  "main": "src/rusultts.ts",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Rust Result Implementation for Typescript, simply. i.e. Modern error handling library.",
+  "author": "just-do-halee <just.do.halee@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "cover": "jest --ci --coverage --maxWorkers=2 && jest-coverage-badges"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/just-do-halee/rusultts.git"
+  },
+  "keywords": [
+    "typescript",
+    "modern",
+    "result",
+    "error",
+    "error-handling",
+    "handling",
+    "debug",
+    "exception",
+    "errors",
+    "rust"
+  ],
+  "bugs": {
+    "url": "https://github.com/just-do-halee/rusultts/issues"
+  },
+  "homepage": "https://github.com/just-do-halee/rusultts#readme",
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "jest": "^27.2.4",
+    "jest-coverage-badges": "^1.1.2",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.3"
+  },
+  "files": [
+    "src/"
+  ]
+}

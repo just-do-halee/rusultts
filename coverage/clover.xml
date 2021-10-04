@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1633368573116" clover="3.2.0">
+  <project timestamp="1633368573117" name="All files">
+    <metrics statements="49" coveredstatements="49" conditionals="14" coveredconditionals="14" methods="16" coveredmethods="16" elements="79" coveredelements="79" complexity="0" loc="49" ncloc="49" packages="2" files="2" classes="2"/>
+    <package name="src">
+      <metrics statements="18" coveredstatements="18" conditionals="6" coveredconditionals="6" methods="7" coveredmethods="7"/>
+      <file name="rusultts.ts" path="/Users/hwakyeom/programs/projects/rusultts/src/rusultts.ts">
+        <metrics statements="18" coveredstatements="18" conditionals="6" coveredconditionals="6" methods="7" coveredmethods="7"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="33" count="30" type="stmt"/>
+        <line num="34" count="30" type="stmt"/>
+        <line num="35" count="30" type="stmt"/>
+        <line num="38" count="33" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="4" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="42" count="29" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="71" count="25" type="stmt"/>
+        <line num="74" count="25" type="stmt"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="102" count="5" type="stmt"/>
+        <line num="105" count="5" type="stmt"/>
+        <line num="113" count="6" type="stmt"/>
+        <line num="114" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="115" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="117" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="test">
+      <metrics statements="31" coveredstatements="31" conditionals="8" coveredconditionals="8" methods="9" coveredmethods="9"/>
+      <file name="test.types.ts" path="/Users/hwakyeom/programs/projects/rusultts/test/test.types.ts">
+        <metrics statements="31" coveredstatements="31" conditionals="8" coveredconditionals="8" methods="9" coveredmethods="9"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="19" count="3" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="26" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="39" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="43" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="46" count="6" type="stmt"/>
+        <line num="50" count="6" type="stmt"/>
+        <line num="51" count="6" type="stmt"/>
+        <line num="54" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="57" count="6" type="stmt"/>
+        <line num="58" count="6" type="stmt"/>
+        <line num="59" count="6" type="stmt"/>
+        <line num="60" count="6" type="stmt"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="65" count="2" type="stmt"/>
+        <line num="66" count="7" type="stmt"/>
+        <line num="67" count="7" type="stmt"/>
+        <line num="69" count="2" type="stmt"/>
+        <line num="70" count="2" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

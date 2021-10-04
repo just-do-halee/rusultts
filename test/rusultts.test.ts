@@ -1,0 +1,140 @@
+import { Result, ResultBox, Ok, Err } from '../src/rusultts';
+import { Stack } from './test.types';
+
+describe('make some results', () => {
+  let createResultTest: <T, E>(okValue?: T, errValue?: E) => Result<T | E>;
+
+  beforeAll(() => {
+    createResultTest = <T, E>(okValue?: T, errValue?: E): Result<T | E> => {
+      let Result0: Result<T | E>;
+      if (okValue) {
+        Result0 = Ok.new<T, E>(okValue);
+      } else if (errValue) {
+        Result0 = Err.new<T, E>('some error message', errValue);
+      } else {
+        return Err.new(`testing error.`, null);
+      }
+      expect(Result0).toBeInstanceOf(ResultBox);
+      expect(Result0.isOk).toEqual(okValue !== undefined);
+      expect(Result0.isErr).toEqual(errValue !== undefined);
+      try {
+        expect(Result0.unwrap()).toEqual(okValue);
+
+        return Ok.new(Result0.unwrap());
+      } catch (e) {
+        const splited = Err.eSplit(e);
+        expect(errValue).toBeDefined();
+        expect(splited[0]).toEqual('some error message');
+        if (errValue) {
+          expect(splited[1]).toEqual(String(errValue));
+          return Ok.new(errValue);
+        } else {
+          return Err.new(`testing error.`, null);
+        }
+      }
+    };
+  });
+
+  it('should be ok before entire testing', () => {
+    // types
+    expect(createResultTest('ok string').isOk).toEqual(true);
+    expect(createResultTest(999).unwrap()).toEqual(999);
+    expect(createResultTest(undefined, 'err').unwrap()).toEqual('err');
+    expect(createResultTest(undefined, 111).unwrap()).toEqual(111);
+    const test1: object = { obj: 'value', some: [2, true] };
+    expect(createResultTest(test1).unwrap()).toEqual(test1);
+    const test2 = ['array', 23, true, 1.5];
+    expect(createResultTest(test2).unwrap()).toEqual(test2);
+    type SomeType = {
+      name: string;
+      age: number;
+      hasAJob: boolean;
+    };
+    const test = {
+      name: 'Name',
+      age: 12,
+      hasAJob: true,
+    };
+    expect(createResultTest<SomeType, undefined>(test).unwrap()).toEqual(test);
+  });
+
+  let divide: (a: number, b: number) => ResultBox<number, number>;
+  beforeEach(() => {
+    divide = (a: number, b: number): ResultBox<number, number> => {
+      if (b === 0) {
+        return Err.new(`b cannot be 0.`, b);
+      }
+      return Ok.new(a / b);
+    };
+  });
+
+  it('divide-> 4 / 2', () => {
+    const test = divide(4, 2);
+    expect(test.isOk).toEqual(true);
+    expect(test.isErr).toEqual(false);
+    expect(test.unwrap()).toEqual(2);
+  });
+
+  it('divide-> 4 / 0', () => {
+    const test = divide(4, 0);
+    expect(test.isOk).toEqual(false);
+    expect(test.isErr).toEqual(true);
+    try {
+      test.unwrap();
+      throw new Error(`testing error.`);
+    } catch (e) {
+      expect(Err.eSplit(new Error(``))).toEqual(['', '']);
+      expect(Err.eSplit(new Error(`fake Error`))[1]).toEqual('');
+      expect(Err.eSplit(e)[1]).toEqual(String(0));
+    }
+  });
+
+  it('should be ok after entire testing', () => {
+    // just for fun
+    let stack = Stack.withCapacity(-10);
+    expect(stack.capacity).toEqual(0);
+    expect(stack.length).toEqual(0);
+    stack.capacity = -1;
+    expect(stack.capacity).toEqual(0);
+    expect(stack.push('some').isErr).toEqual(true);
+    stack.capacity = 5;
+    expect(stack.capacity).toEqual(5);
+    stack = Stack.withCapacity(10);
+    expect(stack.capacity).toEqual(10);
+
+    stack = Stack.new();
+
+    expect(stack).toBeDefined();
+
+    let res = stack.push('0');
+    expect(res.isErr).toBeFalsy();
+    expect(res.isOk).toBeTruthy();
+
+    let res2 = res.unwrap();
+    expect(res2).toBe(stack);
+    expect(res2.pop().unwrap()).toEqual('0');
+    try {
+      res2.pop().unwrap();
+    } catch (e) {
+      expect(Err.eSplit(e)[1]).toEqual('null');
+    }
+    stack
+      .push('1')
+      .unwrap()
+      .push('2')
+      .unwrap()
+      .print()
+      .push('3')
+      .unwrap()
+      .push('4')
+      .unwrap()
+      .push('5')
+      .unwrap()
+      .print();
+    expect(stack.pop().unwrap()).toEqual('5');
+    expect(stack.pop().unwrap()).toEqual('4');
+    expect(stack.pop().unwrap()).toEqual('3');
+    expect(stack.pop().unwrap()).toEqual('2');
+    expect(stack.pop().unwrap()).toEqual('1');
+  });
+});

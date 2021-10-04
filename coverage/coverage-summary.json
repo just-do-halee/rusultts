@@ -1,0 +1,4 @@
+{"total": {"lines":{"total":49,"covered":49,"skipped":0,"pct":100},"statements":{"total":49,"covered":49,"skipped":0,"pct":100},"functions":{"total":16,"covered":16,"skipped":0,"pct":100},"branches":{"total":14,"covered":14,"skipped":0,"pct":100}}
+,"/Users/hwakyeom/programs/projects/rusultts/src/rusultts.ts": {"lines":{"total":18,"covered":18,"skipped":0,"pct":100},"functions":{"total":7,"covered":7,"skipped":0,"pct":100},"statements":{"total":18,"covered":18,"skipped":0,"pct":100},"branches":{"total":6,"covered":6,"skipped":0,"pct":100}}
+,"/Users/hwakyeom/programs/projects/rusultts/test/test.types.ts": {"lines":{"total":31,"covered":31,"skipped":0,"pct":100},"functions":{"total":9,"covered":9,"skipped":0,"pct":100},"statements":{"total":31,"covered":31,"skipped":0,"pct":100},"branches":{"total":8,"covered":8,"skipped":0,"pct":100}}
+}
