@@ -16,7 +16,8 @@ type ResultObject<T> = {
  * }
  *
  * const ok = divide(4, 2).unwrap() === 2; // true
- * const err = divide(4, 0).isErr // true
+ * const err = divide(4, 0);
+ * console.log(err.isErr); // true
  *
  * try {
  *
@@ -55,7 +56,8 @@ export abstract class ResultBox<T, E> {
  * }
  *
  * const ok = divide(4, 2).unwrap() === 2; // true
- * const err = divide(4, 0).isErr // true
+ * const err = divide(4, 0);
+ * console.log(err.isErr); // true
  *
  * try {
  *
@@ -86,7 +88,8 @@ export class Ok<T, E> extends ResultBox<T, E> {
  * }
  *
  * const ok = divide(4, 2).unwrap() === 2; // true
- * const err = divide(4, 0).isErr // true
+ * const err = divide(4, 0);
+ * console.log(err.isErr); // true
  *
  * try {
  *

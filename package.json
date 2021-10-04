@@ -2,7 +2,7 @@
   "name": "rusultts",
   "main": "src/rusultts.ts",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rust Result Implementation for Typescript, simply. i.e. Modern error handling library.",
   "author": "just-do-halee <just.do.halee@gmail.com>",
   "license": "MIT",

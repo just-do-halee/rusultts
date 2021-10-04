@@ -1,13 +1,13 @@
 # `rusultTs`
 
-Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handling library. (no dependencies, pure Typescript code about 50 lines) 100% <a href="./coverage/lcov-report/index.html">[coverage]</a>
+Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handling library. (no dependencies, pure Typescript code about 50 lines) 100% [[coverage]](https://github.com/just-do-halee/rusultts/actions/workflows/main.yml)
 <br>
 <br>
 
-![Coverage lines](./coverage/badge-lines.svg)
-![Coverage functions](./coverage/badge-functions.svg)
-![Coverage branches](./coverage/badge-branches.svg)
-![Coverage statements](./coverage/badge-statements.svg)
+![Coverage lines](./badges/badge-lines.svg)
+![Coverage functions](./badges/badge-functions.svg)
+![Coverage branches](./badges/badge-branches.svg)
+![Coverage statements](./badges/badge-statements.svg)
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -65,7 +65,8 @@ function divide(a: number, b: number): ResultBox<number, number> {
   return Ok.new(a / b);
 }
 const ok = divide(4, 2).unwrap() === 2; // true
-const err = divide(4, 0).isErr; // true
+const err = divide(4, 0);
+console.log(err.isErr); // true
 try {
   err.unwrap();
 } catch (e) {
