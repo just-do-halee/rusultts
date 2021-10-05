@@ -13,6 +13,5 @@ npm-debug.log
 .vscode
 .github
 
-/dist
 /test
 /badges
