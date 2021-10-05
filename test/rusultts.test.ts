@@ -13,11 +13,11 @@ describe('make some results', () => {
 
   beforeAll(() => {
     createResultTest = <T, E>(okValue?: T, errValue?: E): Result<T | E> => {
-      let Result0: Result<T | E>;
+      let Result0: ResultBox<T, E>;
       if (okValue) {
-        Result0 = Ok.new<T, E>(okValue);
+        Result0 = Ok.new(okValue);
       } else if (errValue) {
-        Result0 = Err.new<T, E>('some error message', errValue);
+        Result0 = Err.new('some error message', errValue);
       } else {
         return Err.new(`testing error.`, null);
       }
@@ -85,6 +85,60 @@ describe('make some results', () => {
       }
       return Ok.new(a / b);
     };
+  });
+
+  describe('unwrap_err', () => {
+    it('should be passed', () => {
+      expect(divide(4, 0).unwrap_err()).toEqual(0);
+      expect(divide(4, -2).unwrap_err()).toEqual(-2);
+      expect(() => divide(6, 2).unwrap_err()).toThrowError(
+        `this is not an Error: 3`
+      );
+    });
+    it('should return a number', () => {
+      const someErr = Err.new<string, number>('T: number, E: string', 5);
+      expect(someErr.unwrap_err()).toEqual(5);
+    });
+    it('should throw an Error', () => {
+      const someOk = Ok.new<string, number>('string');
+      expect(() => someOk.unwrap_err()).toThrowError(
+        `this is not an Error: string`
+      );
+    });
+  });
+
+  describe('unwrap_or', () => {
+    it('should be passed', () => {
+      expect(divide(4, 0).unwrap_or(23)).toEqual(23);
+      expect(divide(4, -2).unwrap_or(999)).toEqual(999);
+      expect(divide(4, 2).unwrap_or(999)).toEqual(2);
+    });
+    it('should return a string', () => {
+      const someErr = Err.new<string, number>('T: number, E: string', 5);
+      expect(someErr.unwrap_or('string')).toEqual('string');
+    });
+    it('should return a string', () => {
+      const someOk = Ok.new<string, number>('string');
+      expect(someOk.unwrap_or('another string')).toEqual('string');
+    });
+  });
+
+  describe('unwrap_or_else', () => {
+    it('should be passed', () => {
+      expect(divide(4, 0).unwrap_or_else((eV: number) => eV + 1)).toEqual(1);
+      expect(divide(4, -2).unwrap_or_else((eV: number) => eV - 8)).toEqual(-10);
+      expect(divide(4, 2).unwrap_or_else((eV: number) => eV - 100)).toEqual(2);
+    });
+    it('should return a string', () => {
+      const someErr = Err.new<string, number>('T: number, E: string', 5);
+      expect(someErr.unwrap_or_else((eV: number) => 'string')).toEqual(
+        'string'
+      );
+    });
+    it('should return a number', () => {
+      const someOk = Ok.new<string, number>('string');
+      expect(someOk.unwrap_or_else((eV: number) => 'string')).toEqual('string');
+    });
   });
 
   it('should be passed', () => {

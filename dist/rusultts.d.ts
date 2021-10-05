@@ -41,7 +41,28 @@ export declare abstract class ResultBox<T, E> implements IResult<T, E> {
     readonly isOk: boolean;
     readonly isErr: boolean;
     protected constructor(val: ResultObject<T | E>);
+    /**
+     *
+     * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+     */
     unwrap(): T | never;
+    /**
+     *
+     * @param inputValue
+     * @returns if isErr is true, returns `inputValue<T>` or stored `value<T>`
+     */
+    unwrap_or(inputValue: T): T;
+    /**
+     *
+     * @param {callback} op - callback (innerValue: `E`) => `T`
+     * @returns if isOk is true, returns `value<T>` or computes it from a operating function, contained `value<E> to specific T value`
+     */
+    unwrap_or_else(op: (innerValue: E) => T): T;
+    /**
+     *
+     * @returns if isOk is true, throw new `Error` or `value<E>`
+     */
+    unwrap_err(): E | never;
 }
 /**
  * ## Examples

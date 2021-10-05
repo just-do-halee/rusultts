@@ -1,3 +1,11 @@
+## 1.3.0 (October 6, 2021)
+
+### Release 1.3.0
+
+- new feature: **_unwrap_** -> `unwrap_or`, `unwrap_or_else`, `unwrap_err`
+
+---
+
 ## 1.2.1 (October 6, 2021)
 
 ### Release 1.2.1

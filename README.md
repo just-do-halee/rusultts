@@ -66,17 +66,22 @@ import { ResultBox, Ok, Err } from 'rusultts';
 
 function divide(a: number, b: number): ResultBox<number, number> {
   if (b === 0) {
-    return Err.new(`b cannot be 0.`, b);
+    return Err.new(`b cannot be `, b);
   }
   return Ok.new(a / b);
 }
 const ok = divide(4, 2).unwrap() === 2; // true
-const err = divide(4, 0);
+const err = divide(4, 0); // 4 / 0
+
 console.log(err.isErr); // true
+const getEValue = err.unwrap_err(); // 0
+const getDefault = err.unwrap_or(10); // 10
+const getTrans = err.unwrap_or_else((eV: number) => eV + 1); // 1
+
 try {
   err.unwrap();
 } catch (e) {
-  const value = Err.eSplit(e)[1]; // "0"
+  const errMessage = Err.eSplit(e); // `b cannot be :--> 0`
 }
 ```
 

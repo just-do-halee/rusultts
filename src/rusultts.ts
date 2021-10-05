@@ -48,12 +48,51 @@ export abstract class ResultBox<T, E> implements IResult<T, E> {
     this.isOk = val.error === undefined;
     this.isErr = !this.isOk;
   }
+  /**
+   *
+   * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+   */
   unwrap(): T | never {
     if (this.val.error) {
       this.val.error.message += ':--> ' + String(this.val.value);
       throw this.val.error;
     } else {
       return this.val.value as T;
+    }
+  }
+  /**
+   *
+   * @param inputValue
+   * @returns if isErr is true, returns `inputValue<T>` or stored `value<T>`
+   */
+  unwrap_or(inputValue: T): T {
+    if (this.isErr) {
+      return inputValue;
+    } else {
+      return this.val.value as T;
+    }
+  }
+  /**
+   *
+   * @param {callback} op - callback (innerValue: `E`) => `T`
+   * @returns if isOk is true, returns `value<T>` or computes it from a operating function, contained `value<E> to specific T value`
+   */
+  unwrap_or_else(op: (innerValue: E) => T): T {
+    if (this.val.error) {
+      return op(this.val.value as E);
+    } else {
+      return this.val.value as T;
+    }
+  }
+  /**
+   *
+   * @returns if isOk is true, throw new `Error` or `value<E>`
+   */
+  unwrap_err(): E | never {
+    if (this.val.error) {
+      return this.val.value as E;
+    } else {
+      throw new Error(`this is not an Error: ${this.val.value}`);
     }
   }
 }

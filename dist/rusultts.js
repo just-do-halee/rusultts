@@ -46,6 +46,10 @@ var ResultBox = /** @class */ (function () {
         this.isOk = val.error === undefined;
         this.isErr = !this.isOk;
     }
+    /**
+     *
+     * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+     */
     ResultBox.prototype.unwrap = function () {
         if (this.val.error) {
             this.val.error.message += ':--> ' + String(this.val.value);
@@ -53,6 +57,44 @@ var ResultBox = /** @class */ (function () {
         }
         else {
             return this.val.value;
+        }
+    };
+    /**
+     *
+     * @param inputValue
+     * @returns if isErr is true, returns `inputValue<T>` or stored `value<T>`
+     */
+    ResultBox.prototype.unwrap_or = function (inputValue) {
+        if (this.isErr) {
+            return inputValue;
+        }
+        else {
+            return this.val.value;
+        }
+    };
+    /**
+     *
+     * @param {callback} op - callback (innerValue: `E`) => `T`
+     * @returns if isOk is true, returns `value<T>` or computes it from a operating function, contained `value<E> to specific T value`
+     */
+    ResultBox.prototype.unwrap_or_else = function (op) {
+        if (this.val.error) {
+            return op(this.val.value);
+        }
+        else {
+            return this.val.value;
+        }
+    };
+    /**
+     *
+     * @returns if isOk is true, throw new `Error` or `value<E>`
+     */
+    ResultBox.prototype.unwrap_err = function () {
+        if (this.val.error) {
+            return this.val.value;
+        }
+        else {
+            throw new Error("this is not an Error: " + this.val.value);
         }
     };
     return ResultBox;
