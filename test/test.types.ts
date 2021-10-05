@@ -14,21 +14,21 @@ export interface IStack {
 }
 
 export class Stack implements IStack {
-  #cap: number = 8;
-  #len: number = 0;
-  #lastNode: StrNode = {
+  private cap: number = 8;
+  private len: number = 0;
+  private lastNode: StrNode = {
     str: '',
   };
   get length(): number {
-    return this.#len;
+    return this.len;
   }
   set capacity(value: number) {
-    if (value > this.#cap) {
-      this.#cap = value;
+    if (value > this.cap) {
+      this.cap = value;
     }
   }
   get capacity(): number {
-    return this.#cap;
+    return this.cap;
   }
   protected constructor() {}
   static new(): IStack {
@@ -36,31 +36,31 @@ export class Stack implements IStack {
   }
   static withCapacity(cap: number): IStack {
     const vec = new Stack();
-    vec.#cap = cap < 0 ? 0 : cap;
+    vec.cap = cap < 0 ? 0 : cap;
     return vec;
   }
   push(value: string): Result<IStack> {
-    if (this.#len >= this.#cap) {
+    if (this.len >= this.cap) {
       return Err.new(`full of stack`, null);
     }
-    this.#lastNode = {
-      prev: this.#lastNode,
+    this.lastNode = {
+      prev: this.lastNode,
       str: value,
     };
-    this.#len++;
+    this.len++;
     return Ok.new(this);
   }
   pop(): Result<string> {
-    if (!this.#lastNode.prev) {
+    if (!this.lastNode.prev) {
       return Err.new(`out of bounds`, null);
     }
-    const str = this.#lastNode.str;
-    this.#lastNode = this.#lastNode.prev;
-    this.#len--;
+    const str = this.lastNode.str;
+    this.lastNode = this.lastNode.prev;
+    this.len--;
     return Ok.new(str);
   }
   print(): IStack {
-    let lastNode = this.#lastNode;
+    let lastNode = this.lastNode;
     let output = '';
     while (lastNode.prev) {
       output += lastNode.str + ' ';

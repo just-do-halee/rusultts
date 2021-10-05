@@ -13,6 +13,7 @@ Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handl
 [![NPM Downloads][downloads-image]][downloads-url]
 [![CI](https://github.com/just-do-halee/rusultts/actions/workflows/main.yml/badge.svg)](https://github.com/just-do-halee/rusultts/actions/workflows/main.yml)
 [![License][license-image]][license-url]
+[[changelog]](CHANGELOG.md)
 
 ---
 
@@ -31,6 +32,8 @@ yarn add rusultts
 ## **Examples**<br>
 
 ```ts
+import { Result, Ok, Err } from 'rusultts';
+
 function tryParse(token: string): Result<SomeType> {
   // ... heavy stuffs
   if (somethingWrong) {
@@ -58,6 +61,8 @@ type Result<T> = ResultBox<T, null>;
 ```
 
 ```ts
+import { ResultBox, Ok, Err } from 'rusultts';
+
 function divide(a: number, b: number): ResultBox<number, number> {
   if (b === 0) {
     return Err.new(`b cannot be 0.`, b);

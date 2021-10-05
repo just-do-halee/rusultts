@@ -1,6 +1,6 @@
 // rusultTs
 
-type ResultObject<T> = {
+export type ResultObject<T> = {
   readonly error?: Error;
   readonly value: T;
 };
@@ -109,10 +109,13 @@ export class Err<T, E> extends ResultBox<T, E> {
   }
   /**
    *
-   * @param e Error
+   * @param e Error | unknown
    * @returns [`error.message`, `<E>.toString()`] or ***[error.message, ''] (not found)***
    */
-  static eSplit(e: Error): [string, string] {
+  static eSplit(e: Error | unknown): [string, string] {
+    if (!(e instanceof Error)) {
+      return ['', ''];
+    }
     let val: string[] = e.message.split(':--> ', 2);
     if (val.length !== 2) {
       val = [val[0] || '', ''];

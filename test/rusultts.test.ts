@@ -22,11 +22,8 @@ describe('make some results', () => {
 
         return Ok.new(Result0.unwrap());
       } catch (e) {
-        const splited = Err.eSplit(e);
         expect(errValue).toBeDefined();
-        expect(splited[0]).toEqual('some error message');
         if (errValue) {
-          expect(splited[1]).toEqual(String(errValue));
           return Ok.new(errValue);
         } else {
           return Err.new(`testing error.`, null);
@@ -83,6 +80,7 @@ describe('make some results', () => {
       test.unwrap();
       throw new Error(`testing error.`);
     } catch (e) {
+      expect(Err.eSplit({ this: 'is unknown' })).toEqual(['', '']);
       expect(Err.eSplit(new Error(``))).toEqual(['', '']);
       expect(Err.eSplit(new Error(`fake Error`))[1]).toEqual('');
       expect(Err.eSplit(e)[1]).toEqual(String(0));

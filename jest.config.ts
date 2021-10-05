@@ -1,4 +1,6 @@
-export default {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   coverageDirectory: 'coverage',
   coverageReporters: ['json-summary', 'text', 'lcov'],
   roots: ['<rootDir>'],
@@ -7,3 +9,4 @@ export default {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
 };
+export default config;
