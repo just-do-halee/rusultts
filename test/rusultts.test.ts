@@ -87,6 +87,18 @@ describe('make some results', () => {
     };
   });
 
+  it('should be passed', () => {
+    const testResultNull = (a: number, b: number): Result<number> => {
+      if (b === 0) {
+        return err.new('dividedByZero');
+      }
+      return Ok.new(a / b);
+    };
+    expect(() => testResultNull(4, 0).unwrap()).toThrowError(
+      'do not divide by Zero.:--> null'
+    );
+  });
+
   it('divides-> 4 / 2', () => {
     const test = divide(4, 2);
     expect(test.isOk).toEqual(true);

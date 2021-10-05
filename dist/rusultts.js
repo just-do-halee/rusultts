@@ -158,11 +158,8 @@ var ErrSet = /** @class */ (function () {
     function ErrSet(messagePair) {
         this.messagePair = messagePair;
     }
-    /**
-     * creates and return the error that have already been set.
-     */
     ErrSet.prototype.new = function (errorMessageType, val) {
-        return Err.new(this.messagePair[errorMessageType], val);
+        return Err.new(this.messagePair[errorMessageType], val === undefined ? null : val);
     };
     /**
      *

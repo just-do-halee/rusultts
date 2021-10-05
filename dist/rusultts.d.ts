@@ -121,7 +121,6 @@ export declare type Result<T> = ResultBox<T, null>;
 export declare type MessagePair = {
     [key: string]: string;
 };
-export declare type TOrUndefinedToNull<T> = T extends undefined ? null : T;
 /**
  * creates errors that have already been set.
  * ## Example
@@ -141,7 +140,8 @@ export declare class ErrSet<M extends MessagePair> {
     /**
      * creates and return the error that have already been set.
      */
-    new<T, E>(errorMessageType: keyof M, val: TOrUndefinedToNull<E>): Err<T, TOrUndefinedToNull<E>>;
+    new<T, E>(errorMessageType: keyof M): Err<T, null>;
+    new<T, E>(errorMessageType: keyof M, val: E): Err<T, E>;
     /**
      *
      * @param {Error} e the error in the scope of try~catch.

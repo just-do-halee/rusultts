@@ -155,8 +155,6 @@ export type Result<T> = ResultBox<T, null>;
  */
 export type MessagePair = { [key: string]: string };
 
-export type TOrUndefinedToNull<T> = T extends undefined ? null : T;
-
 /**
  * creates errors that have already been set.
  * ## Example
@@ -175,11 +173,13 @@ export class ErrSet<M extends MessagePair> {
   /**
    * creates and return the error that have already been set.
    */
-  new<T, E>(
-    errorMessageType: keyof M,
-    val: TOrUndefinedToNull<E>
-  ): Err<T, TOrUndefinedToNull<E>> {
-    return Err.new(this.messagePair[errorMessageType], val);
+  new<T, E>(errorMessageType: keyof M): Err<T, null>;
+  new<T, E>(errorMessageType: keyof M, val: E): Err<T, E>;
+  new<T>(errorMessageType: keyof M, val?: any): Err<T, any> {
+    return Err.new(
+      this.messagePair[errorMessageType],
+      val === undefined ? null : val
+    );
   }
   /**
    *

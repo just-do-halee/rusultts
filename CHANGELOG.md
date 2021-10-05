@@ -1,3 +1,11 @@
+## 1.2.1 (October 6, 2021)
+
+### Release 1.2.1
+
+- **_ErrSet_** -> .new() ** returning type `bug fix`ed **
+
+---
+
 ## 1.2.0 (October 6, 2021)
 
 ### Release 1.2.0
