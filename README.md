@@ -1,6 +1,6 @@
 # `rusultTs`
 
-Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handling library. (no dependencies, pure Typescript code about 50 lines) 100% [[coverage]][ci-url]
+Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handling library. (no dependencies, pure Typescript code about 200 lines) 100% [[coverage]][ci-url]
 <br>
 <br>
 
@@ -13,6 +13,7 @@ Rust **_Result Implementation for Typescript_**, simply. i.e. Modern error handl
 [![NPM Downloads][downloads-image]][downloads-url]
 [![CI](https://github.com/just-do-halee/rusultts/actions/workflows/main.yml/badge.svg)][ci-url]
 [![License][license-image]][license-url]
+[![run on repl.it](https://repl.it/badge/github/just-do-halee/rusultts)](https://replit.com/@justdohalee/rusultts-playground#index.ts)
 [[changelog]](CHANGELOG.md)
 
 ---
