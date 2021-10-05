@@ -1,3 +1,12 @@
+## 1.2.0 (October 6, 2021)
+
+### Release 1.2.0
+
+- defining Result interface: IResult
+- new feature: **_Error Set_** -> `createErrorSet`, `ErrSet`
+
+---
+
 ## 1.1.3 (October 5, 2021)
 
 ### Release 1.1.3

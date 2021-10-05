@@ -1,4 +1,11 @@
-import { Result, ResultBox, Ok, Err } from '../src/rusultts';
+import {
+  Result,
+  ResultBox,
+  Ok,
+  Err,
+  createErrorSet,
+  ErrSet,
+} from '../src/rusultts';
 import { Stack } from './test.types';
 
 describe('make some results', () => {
@@ -56,23 +63,38 @@ describe('make some results', () => {
   });
 
   let divide: (a: number, b: number) => ResultBox<number, number>;
+  let err: ErrSet<{
+    dividedByZero: 'do not divide by Zero.';
+    dividedByNegative: 'well, you did divide as Negative value.';
+  }>;
   beforeEach(() => {
+    err = createErrorSet({
+      dividedByZero: 'do not divide by Zero.',
+      dividedByNegative: 'well, you did divide as Negative value.',
+    });
+    expect(err.messagePair.dividedByZero).toEqual('do not divide by Zero.');
+    expect(err.messagePair.dividedByNegative).toEqual(
+      'well, you did divide as Negative value.'
+    );
+
     divide = (a: number, b: number): ResultBox<number, number> => {
       if (b === 0) {
-        return Err.new(`b cannot be 0.`, b);
+        return err.new('dividedByZero', b);
+      } else if (b < 0) {
+        return err.new('dividedByNegative', b);
       }
       return Ok.new(a / b);
     };
   });
 
-  it('divide-> 4 / 2', () => {
+  it('divides-> 4 / 2', () => {
     const test = divide(4, 2);
     expect(test.isOk).toEqual(true);
     expect(test.isErr).toEqual(false);
     expect(test.unwrap()).toEqual(2);
   });
 
-  it('divide-> 4 / 0', () => {
+  it('divides-> 4 / 0', () => {
     const test = divide(4, 0);
     expect(test.isOk).toEqual(false);
     expect(test.isErr).toEqual(true);
@@ -84,6 +106,19 @@ describe('make some results', () => {
       expect(Err.eSplit(new Error(``))).toEqual(['', '']);
       expect(Err.eSplit(new Error(`fake Error`))[1]).toEqual('');
       expect(Err.eSplit(e)[1]).toEqual(String(0));
+    }
+  });
+
+  it('divides-> 4 / -2', () => {
+    const test = divide(4, -2);
+    try {
+      test.unwrap();
+    } catch (e) {
+      expect(() =>
+        err.match({ type: 'unknown' }, 'dividedByNegative').unwrap()
+      ).toThrowError('e is unknown type::--> [object Object]');
+      expect(err.match(e, 'dividedByNegative').unwrap()).toEqual('-2');
+      expect(err.match(e, 'dividedByZero').unwrap()).toBeUndefined();
     }
   });
 

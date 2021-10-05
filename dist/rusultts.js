@@ -1,5 +1,5 @@
 "use strict";
-// rusultTs
+// (c) 2021 just-do-halee(=Hwakyeom Kim)
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Err = exports.Ok = exports.ResultBox = void 0;
+exports.createErrorSet = exports.ErrSet = exports.Err = exports.Ok = exports.ResultBox = void 0;
 /**
  * ## Examples
  *```ts
@@ -141,3 +141,74 @@ var Err = /** @class */ (function (_super) {
     return Err;
 }(ResultBox));
 exports.Err = Err;
+/**
+ * creates errors that have already been set.
+ * ## Example
+ * ```ts
+ * const err = createErrorSet({
+ *  notFound: 'not found',
+ *  somethingWrong: 'something wrong...',
+ *  wrongHeader: 'please fix your header.'
+ * });
+ *
+ * err.new('wrongHeader'); // === Err.new('please fix your header.', null)
+ * ```
+ */
+var ErrSet = /** @class */ (function () {
+    function ErrSet(messagePair) {
+        this.messagePair = messagePair;
+    }
+    /**
+     * creates and return the error that have already been set.
+     */
+    ErrSet.prototype.new = function (errorMessageType, val) {
+        return Err.new(this.messagePair[errorMessageType], val);
+    };
+    /**
+     *
+     * @param {Error} e the error in the scope of try~catch.
+     * @param {MessagePair} errorMessageType in the MessagePair.
+     * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` === the error of errorMessageType then returns `error value<E>` or `undefined`.
+     *
+     * ## Example
+     *```ts
+     * const test = divide(4, 0);
+     * try {
+     *  test.unwrap();
+     * } catch (e) {
+     *  const val = err.match(e, 'dividedByZero').unwrap();
+     *  if(val) {
+     *    return val;
+     *  } else {
+     *    return 'unexpected error.';
+     *  }
+     * }
+     * ```
+     */
+    ErrSet.prototype.match = function (e, errorMessageType) {
+        if (!(e instanceof Error)) {
+            return Err.new("e is unknown type:", e);
+        }
+        var _a = Err.eSplit(e), message = _a[0], value = _a[1];
+        return Ok.new(message === this.messagePair[errorMessageType] ? value : undefined);
+    };
+    return ErrSet;
+}());
+exports.ErrSet = ErrSet;
+/**
+ * creates errors that have already been set.
+ * ## Example
+ * ```ts
+ * const err = createErrorSet({
+ *  notFound: 'not found',
+ *  somethingWrong: 'something wrong...',
+ *  wrongHeader: 'please fix your header.'
+ * });
+ *
+ * err.new('wrongHeader'); // === Err.new('please fix your header.', null)
+ * ```
+ */
+var createErrorSet = function (messagePair) {
+    return new ErrSet(messagePair);
+};
+exports.createErrorSet = createErrorSet;

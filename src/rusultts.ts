@@ -1,9 +1,22 @@
-// rusultTs
+// (c) 2021 just-do-halee(=Hwakyeom Kim)
 
+/**
+ * kind of internal subject(ok or err)
+ */
 export type ResultObject<T> = {
   readonly error?: Error;
   readonly value: T;
 };
+
+/**
+ * international interface
+ */
+export interface IResult<T, E> {
+  readonly isOk: boolean;
+  readonly isErr: boolean;
+  // Returning internal value or Throw an error
+  unwrap(): T | never;
+}
 
 /**
  * ## Examples
@@ -28,7 +41,7 @@ export type ResultObject<T> = {
  * }
  *```
  */
-export abstract class ResultBox<T, E> {
+export abstract class ResultBox<T, E> implements IResult<T, E> {
   readonly isOk: boolean;
   readonly isErr: boolean;
   protected constructor(protected readonly val: ResultObject<T | E>) {
@@ -128,3 +141,96 @@ export class Err<T, E> extends ResultBox<T, E> {
  * easy one, has value of Error as `null`
  */
 export type Result<T> = ResultBox<T, null>;
+
+/**
+ * error's message pair object
+ * ## Example
+ * ```ts
+ * const mp: MessagePair = {
+ *  notFound: 'not found',
+ *  somethingWrong: 'something wrong...',
+ *  wrongHeader: 'please fix your header.'
+ * }
+ * ```
+ */
+export type MessagePair = { [key: string]: string };
+
+export type TOrUndefinedToNull<T> = T extends undefined ? null : T;
+
+/**
+ * creates errors that have already been set.
+ * ## Example
+ * ```ts
+ * const err = createErrorSet({
+ *  notFound: 'not found',
+ *  somethingWrong: 'something wrong...',
+ *  wrongHeader: 'please fix your header.'
+ * });
+ *
+ * err.new('wrongHeader'); // === Err.new('please fix your header.', null)
+ * ```
+ */
+export class ErrSet<M extends MessagePair> {
+  constructor(public readonly messagePair: M) {}
+  /**
+   * creates and return the error that have already been set.
+   */
+  new<T, E>(
+    errorMessageType: keyof M,
+    val: TOrUndefinedToNull<E>
+  ): Err<T, TOrUndefinedToNull<E>> {
+    return Err.new(this.messagePair[errorMessageType], val);
+  }
+  /**
+   *
+   * @param {Error} e the error in the scope of try~catch.
+   * @param {MessagePair} errorMessageType in the MessagePair.
+   * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` === the error of errorMessageType then returns `error value<E>` or `undefined`.
+   *
+   * ## Example
+   *```ts
+   * const test = divide(4, 0);
+   * try {
+   *  test.unwrap();
+   * } catch (e) {
+   *  const val = err.match(e, 'dividedByZero').unwrap();
+   *  if(val) {
+   *    return val;
+   *  } else {
+   *    return 'unexpected error.';
+   *  }
+   * }
+   * ```
+   */
+  match(
+    e: Error | unknown,
+    errorMessageType: keyof M
+  ): ResultBox<string | undefined, unknown> {
+    if (!(e instanceof Error)) {
+      return Err.new(`e is unknown type:`, e);
+    }
+    const [message, value] = Err.eSplit(e);
+    return Ok.new(
+      message === this.messagePair[errorMessageType] ? value : undefined
+    );
+  }
+}
+
+/**
+ * creates errors that have already been set.
+ * ## Example
+ * ```ts
+ * const err = createErrorSet({
+ *  notFound: 'not found',
+ *  somethingWrong: 'something wrong...',
+ *  wrongHeader: 'please fix your header.'
+ * });
+ *
+ * err.new('wrongHeader'); // === Err.new('please fix your header.', null)
+ * ```
+ */
+export const createErrorSet = <M extends MessagePair>(
+  messagePair: M
+): ErrSet<M> => {
+  return new ErrSet(messagePair);
+};
