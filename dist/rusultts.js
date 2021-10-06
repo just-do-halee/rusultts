@@ -170,17 +170,17 @@ var Err = /** @class */ (function (_super) {
     /**
      *
      * @param e Error | unknown
-     * @returns [`error.message`, `<E>.toString()`] or ***[error.message, ''] (not found)***
+     * @returns [`error.message`, `value<E>`] or ***[`string`, null] (not found)***
      */
     Err.eSplit = function (e) {
         if (!(e instanceof Error)) {
-            return ['', ''];
+            return ['', null];
         }
         var val = e.message.split(':--> ', 2);
         if (val.length !== 2) {
-            val = [val[0] || '', ''];
+            return [val[0] || '', null];
         }
-        return val;
+        return [val[0], JSON.parse(val[1])];
     };
     return Err;
 }(ResultBox));
@@ -231,9 +231,7 @@ var ErrSet = /** @class */ (function () {
             return Err.new("e is unknown type:", e);
         }
         var _a = Err.eSplit(e), message = _a[0], value = _a[1];
-        return Ok.new(message === this.messagePair[errorMessageType]
-            ? JSON.parse(value)
-            : undefined);
+        return Ok.new(message === this.messagePair[errorMessageType] ? value : undefined);
     };
     return ErrSet;
 }());

@@ -168,10 +168,10 @@ describe('make some results', () => {
       test.unwrap();
       throw new Error(`testing error.`);
     } catch (e) {
-      expect(Err.eSplit({ this: 'is unknown' })).toEqual(['', '']);
-      expect(Err.eSplit(new Error(``))).toEqual(['', '']);
-      expect(Err.eSplit(new Error(`fake Error`))[1]).toEqual('');
-      expect(Err.eSplit(e)[1]).toEqual(String(0));
+      expect(Err.eSplit({ this: 'is unknown' })).toEqual(['', null]);
+      expect(Err.eSplit(new Error(``))).toEqual(['', null]);
+      expect(Err.eSplit(new Error(`fake Error`))[1]).toEqual(null);
+      expect(Err.eSplit(e)[1]).toEqual(0);
     }
   });
 
@@ -217,7 +217,7 @@ describe('make some results', () => {
     try {
       res2.pop().unwrap();
     } catch (e) {
-      expect(Err.eSplit(e)[1]).toEqual('null');
+      expect(Err.eSplit(e)[1]).toEqual(null);
     }
     stack
       .push('1')

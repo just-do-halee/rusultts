@@ -12,6 +12,9 @@ export interface IResult<T, E> {
     readonly isOk: boolean;
     readonly isErr: boolean;
     unwrap(): T | never;
+    unwrap_or(inputValue: T): T;
+    unwrap_or_else(op: (innerValue: E) => T): T;
+    unwrap_err(): E | never;
 }
 /**
  * ## Examples
@@ -122,9 +125,9 @@ export declare class Err<T, E> extends ResultBox<T, E> {
     /**
      *
      * @param e Error | unknown
-     * @returns [`error.message`, `<E>.toString()`] or ***[error.message, ''] (not found)***
+     * @returns [`error.message`, `value<E>`] or ***[`string`, null] (not found)***
      */
-    static eSplit(e: Error | unknown): [string, string];
+    static eSplit<E>(e: Error | unknown): [string, E | null];
 }
 /**
  * easy one, has value of Error as `null`

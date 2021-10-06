@@ -35,24 +35,70 @@ yarn add rusultts
 ```ts
 import { Result, Ok, Err } from 'rusultts';
 
+// Result<T>: any type can be into it,
+// This is just the generic type.
+
+// I chose <T> as object.
+
+type SomeType = { foo: string, bar: number };
+
+// Also these are just some example functions.
+
 function tryParse(token: string): Result<SomeType> {
-  // ... heavy stuffs
-  if (somethingWrong) {
+
+  // ... doing heavy stuffs ...
+
+  if (somethingWrong) { // happended
+
+    // so returns an Error-Object implementing Result<T>
+
     return Err.new(`something wrong...`, null);
+
   }
-  // ...
-  return Ok.new({ some: 'type', ...stuffs });
+
+  // Or returns an Ok Object containing value for <SomeType>
+
+  return Ok.new({ foo: 'any', bar: 999 });
+
 }
 
-function verify(token: string): boolean {
-  const someType = tryParse(token).unwrap(); // automatically throw
-  // ... more some stuffs
+// tryParse() wrapping function
+
+function verify(token: string): Result<boolean> {
+
+  // ↓ automatic throwing new Error(), or retuns the <SomeType> directly.
+
+  const someType = tryParse(token).unwrap();
+
+  // ... doing more stuffs ...
+
+  // another unwrap
+
   const isItGood = tryGetBool(...).unwrap();
+
   // ...
-  return isItGood;
+
+  return Ok.new(isItGood);
 }
 
-const bool = verify(someToken);
+try {
+
+  // if unwrap is possible, you get a sign that you can use an obvious try catch statement.
+
+  const bool = verify(someToken).unwrap();
+
+} catch(e) {
+
+  // ↓ can get [`string`, 'E | null'] type value.
+
+  const [msg, value] = Err.eSplit(e);
+
+  // message of error & contained value<E>
+  // this value is `null` because of Result<T> = ResultBox<T, null>
+
+  console.log(msg, value);
+
+}
 ```
 
 ### ResultBox
@@ -64,33 +110,51 @@ type Result<T> = ResultBox<T, null>;
 ```ts
 import { ResultBox, Ok, Err } from 'rusultts';
 
+// simple example
+// ResultBox<T, E>: <E> equals containing user value for Error statement. it can be any type.
+
 function divide(a: number, b: number): ResultBox<number, number> {
   if (b === 0) {
     return Err.new(`b cannot be `, b);
   }
   return Ok.new(a / b);
 }
-const ok = divide(4, 2).unwrap() === 2; // true
-const err = divide(4, 0); // 4 / 0
+
+const val = divide(4, 2).unwrap(); // 4 / 2 = 2
+const err = divide(4, 0); // 4 / 0, so error statement.
 
 console.log(err.isErr); // true
-const getEValue = err.unwrap_err(); // 0
-const getDefault = err.unwrap_or(10); // 10
-const getTrans = err.unwrap_or_else((eV: number) => eV + 1); // 1
+
+// returns contained value<number> = 0
+const getValueE = err.unwrap_err();
+
+// if state is error, returns input value = 10
+const getDefault = err.unwrap_or(10);
+
+// like .map((x) => y) for value<E>
+// ↓ will return 1
+const getMapped = err.unwrap_or_else((eV: number) => eV + 1);
 
 try {
   err.unwrap();
 } catch (e) {
-  const errMessage = Err.eSplit(e); // `b cannot be :--> 0`
+  const [errMessage, valueE] = Err.eSplit(e);
+
+  // print `b cannot be :--> -1` out.
+  console.log(errMessage, (-1 + valueE) as number);
 }
 ```
 
 ## **Advanced**<br>
 
+#### **./errors.ts**
+
 ```ts
 import { createErrorSet } from 'rusultts';
 
-const err = createErrorSet({
+// you can easily set all errors.
+
+export default createErrorSet({
   notFound: 'not found',
   somethingWrong: 'something wrong...',
   wrongHeader: 'please fix your header.',
@@ -102,23 +166,25 @@ const err = createErrorSet({
 
 ```ts
 import { ResultBox, Ok, Err } from 'rusultts';
-// and also import our **const `err`**
 
-function divide(a: number, b: number): ResultBox<number, number> => {
+import err from './errors'; // import errors
+
+function divide(a: number, b: number): ResultBox<number, number> {
   if (b === 0) {
-    return err.new('dividedByZero', b); // autocompleted string
+    return err.new('dividedByZero', b); // autocompleted string argument
   } else if (b < 0) {
     return err.new('dividedByNegative', b);
   }
   return Ok.new(a / b);
-};
+}
 
 try {
-  divide(4, -2).unwrap();
+  divide(4, -2).unwrap(); // dividedByNegative error occurs.
 } catch (e) {
-  const val1 = err.match(e, 'dividedByZero').unwrap(); // val1 === undefined
-  const val2 = err.match(e, 'dividedByNegative').unwrap(); // val2 === '-2'
-  const val3 = err.match({ is: 'not errorType' }, 'dividedByNegative').unwrap(); // throw new Error()
+  // you can do error type matching.
+  const val1 = err.match(e, 'dividedByZero').unwrap(); // this will return undefined.
+  const val2 = err.match(e, 'dividedByNegative').unwrap(); // this will return value of number type, `-2`
+  const val3 = err.match({ is: 'not errorType' }, 'dividedByNegative').unwrap(); // throw new Error
 }
 ```
 

@@ -16,6 +16,9 @@ export interface IResult<T, E> {
   readonly isErr: boolean;
   // Returning internal value or Throw an error
   unwrap(): T | never;
+  unwrap_or(inputValue: T): T;
+  unwrap_or_else(op: (innerValue: E) => T): T;
+  unwrap_err(): E | never;
 }
 
 /**
@@ -166,17 +169,17 @@ export class Err<T, E> extends ResultBox<T, E> {
   /**
    *
    * @param e Error | unknown
-   * @returns [`error.message`, `<E>.toString()`] or ***[error.message, ''] (not found)***
+   * @returns [`error.message`, `value<E>`] or ***[`string`, null] (not found)***
    */
-  static eSplit(e: Error | unknown): [string, string] {
+  static eSplit<E>(e: Error | unknown): [string, E | null] {
     if (!(e instanceof Error)) {
-      return ['', ''];
+      return ['', null];
     }
     let val: string[] = e.message.split(':--> ', 2);
     if (val.length !== 2) {
-      val = [val[0] || '', ''];
+      return [val[0] || '', null];
     }
-    return val as [string, string];
+    return [val[0], JSON.parse(val[1])];
   }
 }
 
@@ -254,9 +257,7 @@ export class ErrSet<M extends MessagePair> {
     }
     const [message, value] = Err.eSplit(e);
     return Ok.new(
-      message === this.messagePair[errorMessageType]
-        ? JSON.parse(value)
-        : undefined
+      message === this.messagePair[errorMessageType] ? (value as E) : undefined
     );
   }
 }

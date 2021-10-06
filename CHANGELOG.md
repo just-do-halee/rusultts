@@ -1,3 +1,14 @@
+## 2.0.0 (October 6, 2021)
+
+### Release 2.0.0
+
+- **_auto parsing_** `Err.eSplit(e)` do return [msg, value]: [`string`, `E | null`].
+- this is kind of huge change, so i had to upgrade the major version...
+- adding _unwrap_or, unwrap_or_else, unwrap_err_ on the interface of Result(=IResult)
+- fixes README.md
+
+---
+
 ## 1.4.0 (October 6, 2021)
 
 ### Release 1.4.0
