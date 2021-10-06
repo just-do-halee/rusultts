@@ -50,11 +50,12 @@ export abstract class ResultBox<T, E> implements IResult<T, E> {
   }
   /**
    *
-   * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+   * @returns if isErr is true, throw new `Error` with `${message}:--> ${JSON.stringify(value<E>)}` or returns `value<T>`
+   * @that `Error` (this can be splited by eSplit)
    */
   unwrap(): T | never {
     if (this.val.error) {
-      this.val.error.message += ':--> ' + String(this.val.value);
+      this.val.error.message += ':--> ' + JSON.stringify(this.val.value);
       throw this.val.error;
     } else {
       return this.val.value as T;
@@ -87,12 +88,15 @@ export abstract class ResultBox<T, E> implements IResult<T, E> {
   /**
    *
    * @returns if isOk is true, throw new `Error` or `value<E>`
+   * @that `Error` === 'this is not an Error:--> ' + JSON.stringify(`value<T>`) (this can be splited by eSplit)
    */
   unwrap_err(): E | never {
     if (this.val.error) {
       return this.val.value as E;
     } else {
-      throw new Error(`this is not an Error: ${this.val.value}`);
+      throw new Error(
+        'this is not an Error:--> ' + JSON.stringify(this.val.value)
+      );
     }
   }
 }
@@ -224,7 +228,7 @@ export class ErrSet<M extends MessagePair> {
    *
    * @param {Error} e the error in the scope of try~catch.
    * @param {MessagePair} errorMessageType in the MessagePair.
-   * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` === the error of errorMessageType then returns `error value<E>` or `undefined`.
+   * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` equals the error of errorMessageType then returns `error value<E>` or `undefined`.
    *
    * ## Example
    *```ts
@@ -234,23 +238,25 @@ export class ErrSet<M extends MessagePair> {
    * } catch (e) {
    *  const val = err.match(e, 'dividedByZero').unwrap();
    *  if(val) {
-   *    return val;
+   *    return val; // = 0 <- number type
    *  } else {
    *    return 'unexpected error.';
    *  }
    * }
    * ```
    */
-  match(
+  match<E>(
     e: Error | unknown,
     errorMessageType: keyof M
-  ): ResultBox<string | undefined, unknown> {
+  ): ResultBox<E | undefined, unknown> {
     if (!(e instanceof Error)) {
       return Err.new(`e is unknown type:`, e);
     }
     const [message, value] = Err.eSplit(e);
     return Ok.new(
-      message === this.messagePair[errorMessageType] ? value : undefined
+      message === this.messagePair[errorMessageType]
+        ? JSON.parse(value)
+        : undefined
     );
   }
 }

@@ -92,7 +92,7 @@ describe('make some results', () => {
       expect(divide(4, 0).unwrap_err()).toEqual(0);
       expect(divide(4, -2).unwrap_err()).toEqual(-2);
       expect(() => divide(6, 2).unwrap_err()).toThrowError(
-        `this is not an Error: 3`
+        `this is not an Error:--> ` + JSON.stringify(3)
       );
     });
     it('should return a number', () => {
@@ -102,7 +102,7 @@ describe('make some results', () => {
     it('should throw an Error', () => {
       const someOk = Ok.new<string, number>('string');
       expect(() => someOk.unwrap_err()).toThrowError(
-        `this is not an Error: string`
+        `this is not an Error:--> ` + JSON.stringify('string')
       );
     });
   });
@@ -149,7 +149,7 @@ describe('make some results', () => {
       return Ok.new(a / b);
     };
     expect(() => testResultNull(4, 0).unwrap()).toThrowError(
-      'do not divide by Zero.:--> null'
+      'do not divide by Zero.:--> ' + JSON.stringify(null)
     );
   });
 
@@ -182,8 +182,10 @@ describe('make some results', () => {
     } catch (e) {
       expect(() =>
         err.match({ type: 'unknown' }, 'dividedByNegative').unwrap()
-      ).toThrowError('e is unknown type::--> [object Object]');
-      expect(err.match(e, 'dividedByNegative').unwrap()).toEqual('-2');
+      ).toThrowError(
+        'e is unknown type::--> ' + JSON.stringify({ type: 'unknown' })
+      );
+      expect(err.match(e, 'dividedByNegative').unwrap()).toEqual(-2);
       expect(err.match(e, 'dividedByZero').unwrap()).toBeUndefined();
     }
   });

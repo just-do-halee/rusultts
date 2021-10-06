@@ -48,11 +48,12 @@ var ResultBox = /** @class */ (function () {
     }
     /**
      *
-     * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+     * @returns if isErr is true, throw new `Error` with `${message}:--> ${JSON.stringify(value<E>)}` or returns `value<T>`
+     * @that `Error` (this can be splited by eSplit)
      */
     ResultBox.prototype.unwrap = function () {
         if (this.val.error) {
-            this.val.error.message += ':--> ' + String(this.val.value);
+            this.val.error.message += ':--> ' + JSON.stringify(this.val.value);
             throw this.val.error;
         }
         else {
@@ -88,13 +89,14 @@ var ResultBox = /** @class */ (function () {
     /**
      *
      * @returns if isOk is true, throw new `Error` or `value<E>`
+     * @that `Error` === 'this is not an Error:--> ' + JSON.stringify(`value<T>`) (this can be splited by eSplit)
      */
     ResultBox.prototype.unwrap_err = function () {
         if (this.val.error) {
             return this.val.value;
         }
         else {
-            throw new Error("this is not an Error: " + this.val.value);
+            throw new Error('this is not an Error:--> ' + JSON.stringify(this.val.value));
         }
     };
     return ResultBox;
@@ -207,7 +209,7 @@ var ErrSet = /** @class */ (function () {
      *
      * @param {Error} e the error in the scope of try~catch.
      * @param {MessagePair} errorMessageType in the MessagePair.
-     * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` === the error of errorMessageType then returns `error value<E>` or `undefined`.
+     * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` equals the error of errorMessageType then returns `error value<E>` or `undefined`.
      *
      * ## Example
      *```ts
@@ -217,7 +219,7 @@ var ErrSet = /** @class */ (function () {
      * } catch (e) {
      *  const val = err.match(e, 'dividedByZero').unwrap();
      *  if(val) {
-     *    return val;
+     *    return val; // = 0 <- number type
      *  } else {
      *    return 'unexpected error.';
      *  }
@@ -229,7 +231,9 @@ var ErrSet = /** @class */ (function () {
             return Err.new("e is unknown type:", e);
         }
         var _a = Err.eSplit(e), message = _a[0], value = _a[1];
-        return Ok.new(message === this.messagePair[errorMessageType] ? value : undefined);
+        return Ok.new(message === this.messagePair[errorMessageType]
+            ? JSON.parse(value)
+            : undefined);
     };
     return ErrSet;
 }());

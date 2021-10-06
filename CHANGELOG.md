@@ -1,3 +1,13 @@
+## 1.4.0 (October 6, 2021)
+
+### Release 1.4.0
+
+- **_JSON.stringify(value<T or E>)_** implemented
+- so from now on, can be converted each output errors (e.g JSON.parse(Err.eSplit(e)[1]) === `value<E>`)
+- `createErrSet({...})`.match(e, '...').unwrap() will automatically parse out
+
+---
+
 ## 1.3.0 (October 6, 2021)
 
 ### Release 1.3.0

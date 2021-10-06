@@ -43,7 +43,8 @@ export declare abstract class ResultBox<T, E> implements IResult<T, E> {
     protected constructor(val: ResultObject<T | E>);
     /**
      *
-     * @returns if isErr is true, throw new `Error` with `${message}:--> ${value<E>}` or `value<T>`
+     * @returns if isErr is true, throw new `Error` with `${message}:--> ${JSON.stringify(value<E>)}` or returns `value<T>`
+     * @that `Error` (this can be splited by eSplit)
      */
     unwrap(): T | never;
     /**
@@ -61,6 +62,7 @@ export declare abstract class ResultBox<T, E> implements IResult<T, E> {
     /**
      *
      * @returns if isOk is true, throw new `Error` or `value<E>`
+     * @that `Error` === 'this is not an Error:--> ' + JSON.stringify(`value<T>`) (this can be splited by eSplit)
      */
     unwrap_err(): E | never;
 }
@@ -167,7 +169,7 @@ export declare class ErrSet<M extends MessagePair> {
      *
      * @param {Error} e the error in the scope of try~catch.
      * @param {MessagePair} errorMessageType in the MessagePair.
-     * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` === the error of errorMessageType then returns `error value<E>` or `undefined`.
+     * @returns if `e` is not Error type, return Err<, Type>, or returns Ok<string | undefined,> which means `e` equals the error of errorMessageType then returns `error value<E>` or `undefined`.
      *
      * ## Example
      *```ts
@@ -177,14 +179,14 @@ export declare class ErrSet<M extends MessagePair> {
      * } catch (e) {
      *  const val = err.match(e, 'dividedByZero').unwrap();
      *  if(val) {
-     *    return val;
+     *    return val; // = 0 <- number type
      *  } else {
      *    return 'unexpected error.';
      *  }
      * }
      * ```
      */
-    match(e: Error | unknown, errorMessageType: keyof M): ResultBox<string | undefined, unknown>;
+    match<E>(e: Error | unknown, errorMessageType: keyof M): ResultBox<E | undefined, unknown>;
 }
 /**
  * creates errors that have already been set.
